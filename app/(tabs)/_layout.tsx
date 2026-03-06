@@ -1,7 +1,6 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { View, StyleSheet, Platform } from "react-native";
-import { BlurView } from "expo-blur";
 import Animated, {
   useAnimatedStyle,
   withSpring,
@@ -88,13 +87,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: "#8B8B9E",
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
-        tabBarBackground: () => (
-          <BlurView
-            intensity={95}
-            tint="dark"
-            style={StyleSheet.absoluteFill}
-          />
-        ),
+
         tabBarItemStyle: styles.tabBarItem,
       }}
     >
