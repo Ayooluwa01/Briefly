@@ -8,10 +8,17 @@
     "scheme": "briefly",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aysolutions.briefly", // Add this
+      "buildNumber": "1.0.0",
+      "icon": "./assets/images/icon.png" // Same as root icon
     },
     "android": {
+      "package": "com.aysolutions.briefly", // Add this
+      "versionCode": 1,
+
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
