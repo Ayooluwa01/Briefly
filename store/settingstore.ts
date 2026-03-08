@@ -2,21 +2,19 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-type Theme = "light" | "dark";
-
-interface ThemeState {
-  theme: Theme;
-  setTheme: (value: Theme) => void;
+interface FirstLaunchState {
+  firstLaunch: boolean;
+  setFirstLaunch: (value: boolean) => void;
 }
 
-export const useThemeStore = create<ThemeState>()(
+export const useFirstLaunch = create<FirstLaunchState>()(
   persist(
     (set) => ({
-      theme: "dark",
-      setTheme: (value) => set({ theme: value }),
+      firstLaunch: true,
+      setFirstLaunch: (value) => set({ firstLaunch: value }),
     }),
     {
-      name: "theme-storage",
+      name: "first-launch-storage",
       storage: createJSONStorage(() => AsyncStorage),
     },
   ),

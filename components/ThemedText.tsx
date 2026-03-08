@@ -68,7 +68,7 @@ export function Body({ className = "", ...props }: TextProps) {
 export function BodySmall({ className = "", ...props }: TextProps) {
   return (
     <Text
-      className={`text-sm font-inter text-slate-900 dark:text-slate-50 ${className}`}
+      className={`text-sm font-inter font-medium text-slate-900 dark:text-slate-50 ${className}`}
       {...props}
     />
   );

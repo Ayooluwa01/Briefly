@@ -16,43 +16,50 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import Onboarding1svg from "../../assets/Svgs/Onboarding/Onboarding1.svg";
+import Onboarding2svg from "../../assets/Svgs/Onboarding/Onboarding2.svg";
+import Onboarding3svg from "../../assets/Svgs/Onboarding/Onboarding3.svg";
+
+import { Body, BodySmall, H2 } from "@/components/ThemedText";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
 const ONBOARDING_DATA = [
   {
+    icon: Onboarding1svg,
+    iconsize: 300,
     id: 1,
-    title: "Discover\nYour Journey",
-    description:
-      "Embark on an experience designed to transform the way you interact with possibilities",
-    color: "#0A0E27",
-    accentColor: "#FF6B9D",
-    icon: "✨",
+    title: "Stay ahead of\nthe world",
+    description: "Briefly brings you the stories that matter, curated by AI",
+    accentColor: "#067BF9",
   },
   {
+    icon: Onboarding2svg,
+    iconsize: 400,
     id: 2,
-    title: "Connect\nSeamlessly",
+    title: "News in 3 bullets.",
     description:
-      "Bridge the gap between imagination and reality with fluid, intuitive interactions",
-    color: "#1A1F3A",
-    accentColor: "#00D9FF",
-    icon: "🌊",
+      "Our AI digests long-form articles into three intelligent takeaways, saving you hours every week.",
+    accentColor: "#067BF9",
   },
   {
+    icon: Onboarding3svg,
+    iconsize: 400,
     id: 3,
-    title: "Create\nBoldly",
+    title: "Listen on the go.",
     description:
-      "Unleash your potential and craft experiences that resonate with authentic expression",
-    color: "#0D1B2A",
-    accentColor: "#FFB800",
-    icon: "🚀",
+      "Turn your personalized news feed into a daily audio show. Perfect for your commute or workout.",
+    accentColor: "#067BF9",
   },
 ];
 
 const OnboardingScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useSharedValue(0);
-  const scrollViewRef = React.useRef(null);
+  const scrollViewRef = React.useRef<Animated.ScrollView>(null);
+  const router = useRouter();
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -72,18 +79,31 @@ const OnboardingScreen = () => {
         x: width * (currentIndex + 1),
         animated: true,
       });
+    } else {
+      router.replace("/(tabs)");
     }
   };
 
-  const goToPage = (index) => {
-    scrollViewRef.current?.scrollTo({
-      x: width * index,
-      animated: true,
-    });
+  const goToPage = (index: number) => {
+    router.replace("/(tabs)");
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 ">
+      {/* Skip Button - Top Right */}
+      {currentIndex < ONBOARDING_DATA.length - 1 && (
+        <View className="absolute top-12 right-6 z-10">
+          <TouchableOpacity
+            onPress={() => goToPage(ONBOARDING_DATA.length - 1)}
+            className="py-2 px-4"
+          >
+            <BodySmall className="text-gray-500 dark:text-gray-400">
+              Skip
+            </BodySmall>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <Animated.ScrollView
         ref={scrollViewRef}
         horizontal
@@ -118,7 +138,7 @@ const OnboardingScreen = () => {
 const OnboardingPage = ({ item, index, scrollX }: any) => {
   const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
 
-  const animatedStyle = useAnimatedStyle(() => {
+  const contentAnimatedStyle = useAnimatedStyle(() => {
     const scale = interpolate(
       scrollX.value,
       inputRange,
@@ -150,14 +170,14 @@ const OnboardingPage = ({ item, index, scrollX }: any) => {
     const rotate = interpolate(
       scrollX.value,
       inputRange,
-      [-20, 0, 20],
+      [-10, 0, 10],
       Extrapolate.CLAMP,
     );
 
     const scale = interpolate(
       scrollX.value,
       inputRange,
-      [0.6, 1.2, 0.6],
+      [0.8, 1, 0.8],
       Extrapolate.CLAMP,
     );
 
@@ -166,32 +186,20 @@ const OnboardingPage = ({ item, index, scrollX }: any) => {
     };
   });
 
-  const backgroundAnimatedStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(
-      scrollX.value,
-      inputRange,
-      [width * 0.5, 0, -width * 0.5],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      transform: [{ translateX }],
-    };
-  });
-
   return (
-    <View style={[styles.page, { backgroundColor: item.color }]}>
-      <Animated.View style={[styles.backgroundCircle, backgroundAnimatedStyle]}>
-        <View style={[styles.circle, { backgroundColor: item.accentColor }]} />
+    <View
+      style={{ width }}
+      className="flex-1 items-center justify-center px-8 pt-20"
+    >
+      {/* Icon Section */}
+      <Animated.View style={iconAnimatedStyle} className="mb-8">
+        <item.icon width={item.iconsize} height={item.iconsize} />
       </Animated.View>
 
-      <Animated.View style={[styles.content, animatedStyle]}>
-        <Animated.Text style={[styles.icon, iconAnimatedStyle]}>
-          {item.icon}
-        </Animated.Text>
-
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
+      {/* Text Content */}
+      <Animated.View style={contentAnimatedStyle} className="items-center">
+        <H2 className="text-center mb-4 leading-tight">{item.title}</H2>
+        <Body className="text-center px-4">{item.description}</Body>
       </Animated.View>
     </View>
   );
@@ -204,38 +212,45 @@ const BottomAnimator = ({
   onDotPress,
   onNextPress,
 }: any) => {
+  const isLastSlide = currentIndex === data.length - 1;
+
   return (
-    <View style={styles.bottomContainer}>
-      <View style={styles.dotsContainer}>
-        {data.map((_, index) => (
+    <View className="px-8 pb-12">
+      {/* Pagination Dots */}
+      <View className="flex-row justify-center items-center mb-8 gap-2">
+        {data.map((_: any, index: number) => (
           <Dot
             key={index}
             index={index}
             scrollX={scrollX}
             currentIndex={currentIndex}
-            accentColor={data[currentIndex].accentColor}
             onPress={() => onDotPress(index)}
           />
         ))}
       </View>
 
+      {/* Next/Get Started Button */}
       <TouchableOpacity
-        style={[
-          styles.button,
-          { backgroundColor: data[currentIndex].accentColor },
-        ]}
+        style={[styles.button, { backgroundColor: "#067BF9" }]}
         onPress={onNextPress}
         activeOpacity={0.8}
       >
-        <Text style={styles.buttonText}>
-          {currentIndex === data.length - 1 ? "Get Started" : "Next"}
-        </Text>
+        <View className="flex-row items-center justify-center gap-2">
+          <Text style={styles.buttonText}>
+            {isLastSlide ? "Get Started" : "Next"}
+          </Text>
+          <Ionicons
+            name={isLastSlide ? "checkmark-circle" : "arrow-forward"}
+            size={20}
+            color="#FFFFFF"
+          />
+        </View>
       </TouchableOpacity>
     </View>
   );
 };
 
-const Dot = ({ index, scrollX, currentIndex, accentColor, onPress }: any) => {
+const Dot = ({ index, scrollX, currentIndex, onPress }: any) => {
   const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -266,7 +281,7 @@ const Dot = ({ index, scrollX, currentIndex, accentColor, onPress }: any) => {
           styles.dot,
           animatedStyle,
           {
-            backgroundColor: currentIndex === index ? accentColor : "#ffffff40",
+            backgroundColor: currentIndex === index ? "#067BF9" : "#E2E8F0",
           },
         ]}
       />
@@ -275,90 +290,29 @@ const Dot = ({ index, scrollX, currentIndex, accentColor, onPress }: any) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0A0E27",
-  },
-  page: {
-    width,
-    height,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-  backgroundCircle: {
-    position: "absolute",
-    top: height * 0.15,
-    right: -width * 0.3,
-  },
-  circle: {
-    width: width * 0.8,
-    height: width * 0.8,
-    borderRadius: width * 0.4,
-    opacity: 0.15,
-  },
-  content: {
-    alignItems: "center",
-    paddingHorizontal: 40,
-    zIndex: 1,
-  },
-  icon: {
-    fontSize: 120,
-    marginBottom: 40,
-  },
-  title: {
-    fontSize: 48,
-    fontWeight: "800",
-    color: "#FFFFFF",
-    textAlign: "center",
-    marginBottom: 20,
-    lineHeight: 56,
-    letterSpacing: -1,
-    fontFamily: "System",
-  },
-  description: {
-    fontSize: 17,
-    color: "#FFFFFF",
-    textAlign: "center",
-    lineHeight: 26,
-    opacity: 0.8,
-    fontWeight: "400",
-    letterSpacing: 0.3,
-    fontFamily: "System",
-  },
-  bottomContainer: {
-    position: "absolute",
-    bottom: 60,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    gap: 32,
-  },
-  dotsContainer: {
-    flexDirection: "row",
-    gap: 8,
-    alignItems: "center",
-  },
   dot: {
     height: 8,
     borderRadius: 4,
   },
   button: {
-    paddingHorizontal: 48,
-    paddingVertical: 18,
-    borderRadius: 30,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 8,
+    elevation: 4,
   },
   buttonText: {
-    color: "#0A0E27",
-    fontSize: 17,
-    fontWeight: "700",
-    letterSpacing: 0.5,
-    fontFamily: "System",
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 
