@@ -178,10 +178,12 @@ const OnboardingScreen = () => {
 };
 
 const AnimatedBackground = ({ scrollX, data }: any) => {
+  const inputRange = data.map((_: any, i: number) => i * width);
+
   const backgroundStyle = useAnimatedStyle(() => {
     const backgroundColor = interpolate(
       scrollX.value,
-      data.map((_: any, i: number) => i * width),
+      inputRange,
       ["#F8FAFC", "#F0F9FF", "#F8FAFC"],
       Extrapolate.CLAMP,
     );
@@ -201,8 +203,8 @@ const FloatingParticles = () => {
 
   return (
     <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
-      {particles.map((particle) => (
-        <FloatingParticle key={particle} index={particle} />
+      {particles.map((particleIndex) => (
+        <FloatingParticle key={particleIndex} index={particleIndex} />
       ))}
     </View>
   );
@@ -296,9 +298,11 @@ const ProgressBar = ({
   currentIndex: number;
   total: number;
 }) => {
+  const bars = Array.from({ length: total }, (_, i) => i);
+
   return (
     <View className="flex-row gap-1.5">
-      {Array.from({ length: total }).map((_, index) => (
+      {bars.map((index) => (
         <View
           key={index}
           className="h-1 flex-1 rounded-full overflow-hidden bg-gray-200/50 dark:bg-gray-700/50"
