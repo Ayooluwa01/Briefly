@@ -1,15 +1,9 @@
-import {
-  StyleSheet,
-  View,
-  Animated,
-  Dimensions,
-  Button,
-  Text,
-} from "react-native";
+import { StyleSheet, View, Animated, Dimensions } from "react-native";
 import React, { useEffect, useRef } from "react";
 import Appicon from "../../assets/Svgs/Appicon.svg";
 import { BodySmall, H1 } from "@/components/ThemedText";
-import { useThemeStore } from "@/store/themestore";
+import { useFirstLaunch } from "@/store/settingstore";
+import { useRouter } from "expo-router";
 
 const { height } = Dimensions.get("window");
 
@@ -17,6 +11,8 @@ export default function SplashScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const logoScale = useRef(new Animated.Value(0.8)).current;
+  const firstLaunch = useFirstLaunch((state) => state.firstLaunch);
+  const router = useRouter();
 
   useEffect(() => {
     Animated.sequence([
@@ -41,13 +37,20 @@ export default function SplashScreen() {
         delay: 200,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, []);
+    ]).start(() => {
+      setTimeout(() => {
+        if (firstLaunch) {
+          router.replace("/(Onboarding)");
+        } else {
+          router.replace("/(tabs)");
+        }
+      }, 500); // Add small delay to ensure smooth transition
+    });
+  }, [firstLaunch, router, fadeAnim, slideAnim, logoScale]);
 
   return (
-    <View className="flex-1  justify-between items-center ">
+    <View className="flex-1 justify-between items-center">
       {/* Main Content */}
-
       <View className="flex-1 justify-center items-center">
         {/* Logo with Animation */}
         <Animated.View
@@ -82,7 +85,7 @@ export default function SplashScreen() {
         className="pb-12 items-center"
         style={{ opacity: fadeAnim }}
       >
-        <BodySmall className=" text-center">
+        <BodySmall className="text-center">
           News that respects your time...
         </BodySmall>
       </Animated.View>

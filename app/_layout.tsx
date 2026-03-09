@@ -16,14 +16,13 @@ import {
 } from "@expo-google-fonts/inter";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { useFirstLaunch } from "@/store/settingstore";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const router = useRouter();
-  const rootNavigationState = useRootNavigationState(); // <-- Added to track navigation mount state
+  const rootNavigationState = useRootNavigationState();
 
   const [loaded, error] = useFonts({
     Inter_100Thin,
@@ -38,7 +37,6 @@ export default function RootLayout() {
   });
 
   const [appReady, setAppReady] = useState(false);
-  const firstLaunch = useFirstLaunch((state) => state.firstLaunch);
 
   // 1. Handle Font Loading & Splash Screen
   useEffect(() => {
@@ -53,13 +51,9 @@ export default function RootLayout() {
     // Wait until fonts are loaded AND the navigation container is completely mounted
     if (!appReady || !rootNavigationState?.key) return;
 
-    // Route the user
-    if (firstLaunch) {
-      router.replace("/(Onboarding)");
-    } else {
-      router.replace("/(tabs)");
-    }
-  }, [appReady, firstLaunch, rootNavigationState?.key]);
+    // Always start at splash - splash screen will handle routing to onboarding or tabs
+    router.replace("/(Splash)");
+  }, [appReady, rootNavigationState?.key, router]);
 
   // Do not render the Stack until fonts are loaded
   if (!loaded && !error) return null;
