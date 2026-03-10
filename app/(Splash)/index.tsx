@@ -44,7 +44,7 @@ export default function SplashScreen() {
         } else {
           router.replace("/(Auth)");
         }
-      }, 500); // Add small delay to ensure smooth transition
+      }, 500);
     });
   }, [firstLaunch, router, fadeAnim, slideAnim, logoScale]);
 
@@ -74,7 +74,7 @@ export default function SplashScreen() {
           }}
         >
           <H1 className="text-center mb-2">Briefly.</H1>
-          <BodySmall className="text-gray-600 dark:text-gray-400 text-center">
+          <BodySmall className=" text-center ">
             Intelligent News Curation
           </BodySmall>
         </Animated.View>

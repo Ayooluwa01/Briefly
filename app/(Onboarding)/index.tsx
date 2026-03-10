@@ -97,7 +97,7 @@ const OnboardingScreen = () => {
 
   const completeOnboarding = () => {
     setFirstLaunch(false);
-    router.replace("/(tabs)");
+    router.replace("/(Auth)");
   };
 
   const goToNext = () => {
@@ -118,7 +118,7 @@ const OnboardingScreen = () => {
   };
 
   return (
-    <View className="flex-1 bg-white dark:bg-gray-950">
+    <View className="flex-1 ">
       {/* Animated Background Gradient */}
       <AnimatedBackground scrollX={scrollX} data={ONBOARDING_DATA} />
 
@@ -127,7 +127,7 @@ const OnboardingScreen = () => {
 
       {/* Skip Button - Top Right */}
       {currentIndex < ONBOARDING_DATA.length - 1 && (
-        <View className="absolute top-12 right-6 z-20">
+        <View className="absolute top-16 right-6 z-20">
           <TouchableOpacity
             onPress={skipOnboarding}
             className="py-2 px-4 bg-white/80 dark:bg-gray-800/80 rounded-full backdrop-blur"
