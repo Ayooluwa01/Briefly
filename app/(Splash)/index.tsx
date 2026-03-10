@@ -42,7 +42,7 @@ export default function SplashScreen() {
         if (firstLaunch) {
           router.replace("/(Onboarding)");
         } else {
-          router.replace("/(tabs)");
+          router.replace("/(Auth)");
         }
       }, 500); // Add small delay to ensure smooth transition
     });
