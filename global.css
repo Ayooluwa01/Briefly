@@ -6,7 +6,7 @@
 @layer base {
   :root {
     /* Backgrounds */
-    --color-background: 255 255 255; /* #fff */
+    --color-background: #ffffff; /* #fff */
     --color-background-secondary: 248 250 252; /* #f8fafc */
     --color-background-tertiary: 241 245 249; /* #f1f5f9 */
 

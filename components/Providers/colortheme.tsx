@@ -1,3 +1,4 @@
+// components/ColorTheme.tsx
 import { useThemeStore } from "@/store/themestore";
 import React, { useEffect } from "react";
 import { View } from "react-native";
@@ -10,10 +11,14 @@ import {
 } from "@react-navigation/native";
 import { useColorScheme as useNativeWindColor } from "nativewind";
 
+const BG = {
+  light: "#ffffff",
+  dark: "#151718",
+};
+
 export function ColorTheme({ children }: { children: React.ReactNode }) {
   const { setColorScheme } = useNativeWindColor();
   const theme = useThemeStore((state) => state.theme);
-
   const isDark = theme === "dark";
 
   useEffect(() => {
@@ -23,10 +28,13 @@ export function ColorTheme({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
       <SafeAreaView
-        className="flex-1 "
+        className="flex-1"
+        style={{ backgroundColor: BG[theme] }}
         edges={["top", "left", "right", "bottom"]}
       >
-        <View className="flex-1 bg-main-bg">{children}</View>
+        <View className="flex-1" style={{ backgroundColor: BG[theme] }}>
+          {children}
+        </View>
       </SafeAreaView>
       <StatusBar style={isDark ? "light" : "dark"} />
     </ThemeProvider>
