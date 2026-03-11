@@ -16,6 +16,9 @@ import { useThemeStore } from "@/store/themestore";
 import { H2, BodySmall } from "@/components/ThemedText";
 import { Logo } from "@/components/icons/logo";
 import { AppFormField } from "@/components/inputs/Forminput";
+import Google from "../../assets/Svgs/Authentication/Google.svg";
+import Apple from "../../assets/Svgs/Authentication/Apple.svg";
+import { router } from "expo-router";
 
 interface LoginValues {
   email: string;
@@ -74,30 +77,52 @@ export default function Loginscreen() {
             <>
               <AppFormField
                 name="email"
-                placeholder="Email"
+                placeholder="Enter your email"
                 keyboardType="email-address"
                 icon="mail-outline"
               />
               <AppFormField
                 name="password"
-                placeholder="Password"
+                placeholder="Enter your password"
                 secureTextEntry
                 icon="lock-closed-outline"
               />
-              <TouchableOpacity
-                onPress={() => handleSubmit()}
-                className="bg-['#067BF9'] w-full p-4 rounded-3xl mt-4 active:opacity-80"
-              >
-                <Text className="text-white text-center font-inter-bold text-lg">
-                  Sign In
-                </Text>
+              {/* Forgot password text  */}
+              <TouchableOpacity className="self-end">
+                <BodySmall className="text-blue-text font-inter-medium">
+                  Forgot Password?
+                </BodySmall>
               </TouchableOpacity>
+              {/* Sign In + Biometric row */}
+              <View className="flex-row items-center gap-3 mt-4">
+                <TouchableOpacity
+                  onPress={() => handleSubmit()}
+                  className="flex-1 p-4 rounded-3xl active:opacity-80"
+                  style={{ backgroundColor: "#067BF9" }}
+                >
+                  <Text className="text-white text-center font-inter-bold text-lg">
+                    Login
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity className="items-center justify-center p-4 rounded-3xl border border-main-border active:opacity-70">
+                  <Ionicons
+                    name={
+                      Platform.OS === "ios"
+                        ? "scan-outline"
+                        : "finger-print-outline"
+                    }
+                    size={24}
+                    color={isDark ? "#9BA1A6" : "#687076"}
+                  />
+                </TouchableOpacity>
+              </View>
             </>
           )}
         </Formik>
 
         {/* Divider */}
-        <View className="flex-row items-center my-12">
+        <View className="flex-row items-center my-8">
           <View className="flex-1 h-px bg-main-border" />
           <Text className="mx-4 text-main-text-tertiary text-sm font-inter">
             Or
@@ -105,10 +130,10 @@ export default function Loginscreen() {
           <View className="flex-1 h-px bg-main-border" />
         </View>
 
-        {/* Social + Biometric */}
+        {/* Social buttons */}
         <View className="gap-3">
-          <TouchableOpacity className="flex-row items-center justify-center w-full p-4 rounded-2xl border  border-gray-300 bg-card-bg active:opacity-70">
-            <Ionicons name="logo-google" size={20} color="#EA4335" />
+          <TouchableOpacity className="flex-row items-center justify-center w-full p-4 rounded-2xl  bg-card-bg active:opacity-70">
+            <Google />
             <Text className="ml-3 font-inter-semibold text-main-text">
               Google
             </Text>
@@ -116,34 +141,30 @@ export default function Loginscreen() {
 
           {Platform.OS === "ios" && (
             <TouchableOpacity
-              className={`flex-row items-center justify-center w-full p-4 rounded-2xl active:opacity-70 ${isDark ? "bg-white" : "bg-black"}`}
+              className="flex-row items-center justify-center w-full p-4 rounded-2xl active:opacity-70"
+              style={{ backgroundColor: isDark ? "#ffffff" : "#000000" }}
             >
-              <Ionicons
-                name="logo-apple"
-                size={20}
-                color={isDark ? "#000" : "#fff"}
-              />
+              <Apple />
               <Text
-                className={`ml-3 font-inter-semibold ${isDark ? "text-black" : "text-white"}`}
+                className="ml-3 font-inter-semibold"
+                style={{ color: isDark ? "#000000" : "#ffffff" }}
               >
                 Continue with Apple
               </Text>
             </TouchableOpacity>
           )}
-
-          <TouchableOpacity className="flex-col gap-6 items-center justify-center w-full p-4 rounded-2xl  bg-card-bg active:opacity-70">
-            <Ionicons
-              name={
-                Platform.OS === "ios" ? "scan-outline" : "finger-print-outline"
-              }
-              size={22}
-              color={isDark ? "#9BA1A6" : "#687076"}
-            />
-            <Text className="ml-3 font-inter-semibold text-main-text">
-              {Platform.OS === "ios" ? "Use Face ID" : "Tap to unlock"}
-            </Text>
-          </TouchableOpacity>
         </View>
+
+        {/* Signup Bottom Text */}
+        <TouchableOpacity
+          onPress={() => router.push("/(Auth)/Signup")}
+          className="mt-8"
+        >
+          <BodySmall className="text-center text-main-text-secondary">
+            Don&apos;t have an account?{" "}
+            <Text className="text-blue-text font-inter-semibold">Sign Up</Text>
+          </BodySmall>
+        </TouchableOpacity>
       </View>
     </KeyboardAwareScrollView>
   );

@@ -19,7 +19,7 @@ module.exports = {
         "main-text-secondary":
           "rgb(var(--color-text-secondary) / <alpha-value>)",
         "main-text-tertiary": "rgb(var(--color-text-tertiary) / <alpha-value>)",
-
+        "blue-text": "#067BF9",
         // Tint/Primary
         "primary-tint": "rgb(var(--color-tint) / <alpha-value>)",
         "primary-tint-hover": "rgb(var(--color-tint-hover) / <alpha-value>)",

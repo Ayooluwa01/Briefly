@@ -74,7 +74,14 @@ import { Stack } from "expo-router";
 import "react-native-reanimated";
 import "../global.css";
 import { ColorTheme } from "@/components/Providers/colortheme";
-
+import { AppState, Platform, View, Text } from "react-native";
+import NetInfo, { useNetInfo } from "@react-native-community/netinfo";
+import {
+  QueryClient,
+  QueryClientProvider,
+  onlineManager,
+  focusManager,
+} from "@tanstack/react-query";
 import {
   Inter_100Thin,
   Inter_200ExtraLight,
@@ -90,9 +97,45 @@ import {
 
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 SplashScreen.preventAutoHideAsync();
+if (__DEV__) {
+  require("../ReactotronConfig");
+}
 
+// 1.  Online Manager (Refetch on reconnect)
+onlineManager.setEventListener((setOnline) => {
+  return NetInfo.addEventListener((state) => {
+    setOnline(!!state.isConnected);
+  });
+});
+
+// 2. Setup Focus Manager (Refetch when app comes to foreground)
+function onAppStateChange(status: string) {
+  if (Platform.OS !== "web") {
+    focusManager.setFocused(status === "active");
+  }
+}
+
+// 3. Subscribe to AppState changes
+const subscription = AppState.addEventListener("change", onAppStateChange);
+
+// Queryclient
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
+// Persiting query client with async storage
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+});
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     Inter_100Thin,
@@ -105,6 +148,7 @@ export default function RootLayout() {
     Inter_800ExtraBold,
     Inter_900Black,
   });
+  const { isInternetReachable } = useNetInfo();
 
   useEffect(() => {
     if (loaded || error) {
@@ -118,12 +162,22 @@ export default function RootLayout() {
 
   return (
     <ColorTheme>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(Splash)" />
-        <Stack.Screen name="(Onboarding)" />
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="(Auth)" />
-      </Stack>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister: asyncStoragePersister }}
+      >
+        {/* {isConnected === false && (
+          <View className="bg-red-500 p-2 items-center">
+            <Text className="text-white text-xs font-bold">Offline Mode</Text>
+          </View>
+        )} */}
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(Splash)" />
+          <Stack.Screen name="(Onboarding)" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(Auth)" />
+        </Stack>
+      </PersistQueryClientProvider>
     </ColorTheme>
   );
 }
