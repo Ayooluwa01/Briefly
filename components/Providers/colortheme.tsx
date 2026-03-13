@@ -32,7 +32,7 @@ export function ColorTheme({ children }: { children: React.ReactNode }) {
         style={{ backgroundColor: BG[theme] }}
         edges={["top", "left", "right", "bottom"]}
       >
-        <View className="flex-1" style={{ backgroundColor: BG[theme] }}>
+        <View className="flex-1 " style={{ backgroundColor: BG[theme] }}>
           {children}
         </View>
       </SafeAreaView>

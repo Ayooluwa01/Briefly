@@ -50,6 +50,30 @@ module.exports = {
         "inter-bold": ["Inter_700Bold"],
         "inter-black": ["Inter_900Black"],
       },
+      spacing: {
+        // 1. App Gutter (The consistent horizontal padding for all screens)
+        "screen-edge": "20px",
+        gutter: "20px",
+
+        // 2. Element Spacing (Space between small items like Icon & Text)
+        xs: "4px",
+        sm: "8px",
+        md: "16px",
+        lg: "24px",
+
+        // 3. Section Spacing (Space between large chunks of UI)
+        section: "32px",
+        "section-lg": "48px",
+
+        // 4. Fixed Component Heights
+        header: "64px",
+        input: "56px",
+        btn: "52px",
+
+        // 5. Safe Area Placeholders (Use with safe-area-context)
+        "safe-top": "44px", // Default notch height approximation
+        "safe-bottom": "34px",
+      },
     },
   },
   plugins: [],

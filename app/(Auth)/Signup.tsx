@@ -35,7 +35,7 @@ interface SignupValues {
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required().label("Full name"),
   email: Yup.string().required().email().label("Email address"),
-  countryCode: Yup.string().required().label("Country code"), // ← add label
+  countryCode: Yup.string().required().label("Country code"),
   phoneNumber: Yup.string().required().label("Phone number"),
   password: Yup.string().required().min(8).label("Password"),
   country: Yup.string().required().label("Country"),
@@ -58,10 +58,9 @@ export default function SignupScreen() {
   const isDark = theme === "dark";
   const [step, setStep] = useState<number>(1);
 
-  // ← removed handleSelect — it does not belong here
-
   const handleSignup = (values: SignupValues) => {
     console.log("Signup Values:", values);
+    router.push("/Otp");
   };
 
   const handleNextStep = async (
