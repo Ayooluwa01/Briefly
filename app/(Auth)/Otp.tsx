@@ -61,25 +61,48 @@ export default function Otp() {
     }, 1000);
   };
 
+  // const handleNumpad = (val: string) => {
+
   const handleNumpad = (val: string) => {
     setError("");
+
     if (val === "del") {
-      const lastFilled = [...code]
-        .map((v, i) => (v ? i : -1))
-        .filter((i) => i >= 0)
-        .pop();
-      if (lastFilled === undefined) return;
-      const next = [...code];
-      next[lastFilled] = "";
-      setCode(next);
+      // join to string, remove last character, split back to array
+      const currentString = code.join(""); // ["1","3","7","","",""] → "137"
+      const newString = currentString.slice(0, -1); // "137" → "13"
+      const newCode = newString.split(""); // "13" → ["1","3"]
+      // pad with empty strings to keep length at 6
+      while (newCode.length < CODE_LENGTH) newCode.push("");
+      setCode(newCode);
       return;
     }
-    const firstEmpty = code.findIndex((v) => v === "");
-    if (firstEmpty === -1) return;
-    const next = [...code];
-    next[firstEmpty] = val;
-    setCode(next);
+
+    const currentString = code.join(""); // ["1","3","","","",""] → "13"
+    if (currentString.length >= CODE_LENGTH) return; // already full
+    const newString = currentString + val; // "13" + "7" → "137"
+    const newCode = newString.split(""); // → ["1","3","7"]
+    // pad with empty strings to keep length at 6
+    while (newCode.length < CODE_LENGTH) newCode.push("");
+    setCode(newCode);
   };
+  //   setError("");
+  //   if (val === "del") {
+  //     const lastFilled = [...code]
+  //       .map((v, i) => (v ? i : -1))
+  //       .filter((i) => i >= 0)
+  //       .pop();
+  //     if (lastFilled === undefined) return;
+  //     const next = [...code];
+  //     next[lastFilled] = "";
+  //     setCode(next);
+  //     return;
+  //   }
+  //   const firstEmpty = code.findIndex((v) => v === "");
+  //   if (firstEmpty === -1) return;
+  //   const next = [...code];
+  //   next[firstEmpty] = val;
+  //   setCode(next);
+  // };
 
   const handleVerify = async () => {
     const full = code.join("");
