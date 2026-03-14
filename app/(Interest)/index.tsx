@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import React, { useState, useCallback, memo } from "react";
 import { BodyLarge, Label } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
@@ -116,7 +116,11 @@ export default function InterestScreen() {
     );
   }, []);
   return (
-    <View className="flex-1 p-screen-edge">
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ flexGrow: 1 }}
+      className="p-screen-edge"
+    >
       <TouchableOpacity className="items-end mb-big">
         <Text>Skip</Text>
       </TouchableOpacity>
@@ -209,6 +213,6 @@ export default function InterestScreen() {
           </TouchableOpacity>
         </MotiView>
       </View>
-    </View>
+    </ScrollView>
   );
 }
