@@ -1,11 +1,12 @@
 // components/inputs/FormInput.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
   Text,
   TextInputProps,
   TouchableOpacity,
+  Vibration,
 } from "react-native";
 import { useFormikContext } from "formik";
 import { Ionicons } from "@expo/vector-icons";

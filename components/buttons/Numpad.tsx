@@ -1,5 +1,5 @@
-// components/inputs/Numpad.tsx
-import React from "react";
+// components/buttons/Numpad.tsx
+import React, { memo } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useThemeStore } from "@/store/themestore";
@@ -16,7 +16,7 @@ const KEYS = [
   ["", "0", "del"],
 ];
 
-export const Numpad = ({ onPress }: NumpadProps) => {
+export const Numpad = memo(({ onPress }: NumpadProps) => {
   const theme = useThemeStore((state) => state.theme);
   const isDark = theme === "dark";
   const iconColor = isDark ? "#9BA1A6" : "#687076";
@@ -33,7 +33,7 @@ export const Numpad = ({ onPress }: NumpadProps) => {
               <TouchableOpacity
                 key={ki}
                 onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
                   onPress(key);
                 }}
                 activeOpacity={0.6}
@@ -61,4 +61,6 @@ export const Numpad = ({ onPress }: NumpadProps) => {
       ))}
     </View>
   );
-};
+});
+
+Numpad.displayName = "Numpad";

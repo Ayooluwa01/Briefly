@@ -176,6 +176,7 @@ export default function RootLayout() {
           <Stack.Screen name="(Onboarding)" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="(Auth)" />
+          <Stack.Screen name="(Interest)" />
         </Stack>
       </PersistQueryClientProvider>
     </ColorTheme>

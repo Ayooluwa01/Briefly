@@ -39,6 +39,7 @@ export default function Loginscreen() {
 
   const handleLogin = (values: LoginValues) => {
     console.log("Login Values:", values);
+    router.push("/(Auth)/Otp");
   };
 
   return (

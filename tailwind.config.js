@@ -56,10 +56,10 @@ module.exports = {
         gutter: "20px",
 
         // 2. Element Spacing (Space between small items like Icon & Text)
-        xs: "4px",
-        sm: "8px",
-        md: "16px",
-        lg: "24px",
+        small: "4px",
+        medium: "8px",
+        big: "16px",
+        large: "24px",
 
         // 3. Section Spacing (Space between large chunks of UI)
         section: "32px",

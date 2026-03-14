@@ -1,13 +1,6 @@
 // screens/Otp.tsx
-import {
-  Dimensions,
-  Text,
-  View,
-  TouchableOpacity,
-  Vibration,
-} from "react-native";
-import React, { useState, useEffect, useRef } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Dimensions, Text, View, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Backbutton } from "@/components/buttons/Backbutton";
 import { H4 } from "@/components/ThemedText";
 import { MotiView } from "moti";
@@ -15,6 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useThemeStore } from "@/store/themestore";
 import { router } from "expo-router";
 import { Numpad } from "@/components/buttons/Numpad";
+import * as Haptics from "expo-haptics";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { height } = Dimensions.get("window");
 const CODE_LENGTH = 6;
@@ -24,31 +19,22 @@ const BRAND_BLUE = "#067BF9";
 export default function Otp() {
   const theme = useThemeStore((state) => state.theme);
   const isDark = theme === "dark";
+  const insets = useSafeAreaInsets();
 
   const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(""));
   const [error, setError] = useState<string>("");
   const [seconds, setSeconds] = useState(RESEND_SECONDS);
   const [isVerifying, setIsVerifying] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const codeRef = useRef<string[]>(code); // ← ref to read code in async context
 
-  // countdown timer
+  // keep ref in sync with state
   useEffect(() => {
-    timerRef.current = setInterval(() => {
-      setSeconds((s) => {
-        if (s <= 1) {
-          clearInterval(timerRef.current!);
-          return 0;
-        }
-        return s - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current!);
-  }, []);
+    codeRef.current = code;
+  }, [code]);
 
-  const handleResend = () => {
-    setCode(Array(CODE_LENGTH).fill(""));
-    setError("");
-    setSeconds(RESEND_SECONDS);
+  // ── timer ──────────────────────────────────────────────────────────────────
+  const startTimer = useCallback(() => {
     clearInterval(timerRef.current!);
     timerRef.current = setInterval(() => {
       setSeconds((s) => {
@@ -59,56 +45,42 @@ export default function Otp() {
         return s - 1;
       });
     }, 1000);
-  };
+  }, []);
 
-  // const handleNumpad = (val: string) => {
+  useEffect(() => {
+    startTimer();
+    return () => clearInterval(timerRef.current!);
+  }, []);
 
-  const handleNumpad = (val: string) => {
+  // ── handlers ───────────────────────────────────────────────────────────────
+  const handleResend = useCallback(() => {
+    setCode(Array(CODE_LENGTH).fill(""));
     setError("");
+    setSeconds(RESEND_SECONDS);
+    startTimer();
+  }, [startTimer]);
 
-    if (val === "del") {
-      // join to string, remove last character, split back to array
-      const currentString = code.join(""); // ["1","3","7","","",""] → "137"
-      const newString = currentString.slice(0, -1); // "137" → "13"
-      const newCode = newString.split(""); // "13" → ["1","3"]
-      // pad with empty strings to keep length at 6
+  const handleNumpad = useCallback((val: string) => {
+    setError("");
+    setCode((prev) => {
+      const currentString = prev.join("");
+      if (val === "del") {
+        const newCode = currentString.slice(0, -1).split("");
+        while (newCode.length < CODE_LENGTH) newCode.push("");
+        return newCode;
+      }
+      if (currentString.length >= CODE_LENGTH) return prev;
+      const newCode = (currentString + val).split("");
       while (newCode.length < CODE_LENGTH) newCode.push("");
-      setCode(newCode);
-      return;
-    }
+      return newCode;
+    });
+  }, []);
 
-    const currentString = code.join(""); // ["1","3","","","",""] → "13"
-    if (currentString.length >= CODE_LENGTH) return; // already full
-    const newString = currentString + val; // "13" + "7" → "137"
-    const newCode = newString.split(""); // → ["1","3","7"]
-    // pad with empty strings to keep length at 6
-    while (newCode.length < CODE_LENGTH) newCode.push("");
-    setCode(newCode);
-  };
-  //   setError("");
-  //   if (val === "del") {
-  //     const lastFilled = [...code]
-  //       .map((v, i) => (v ? i : -1))
-  //       .filter((i) => i >= 0)
-  //       .pop();
-  //     if (lastFilled === undefined) return;
-  //     const next = [...code];
-  //     next[lastFilled] = "";
-  //     setCode(next);
-  //     return;
-  //   }
-  //   const firstEmpty = code.findIndex((v) => v === "");
-  //   if (firstEmpty === -1) return;
-  //   const next = [...code];
-  //   next[firstEmpty] = val;
-  //   setCode(next);
-  // };
-
-  const handleVerify = async () => {
-    const full = code.join("");
+  const handleVerify = useCallback(async () => {
+    const full = codeRef.current.join(""); // ← read from ref, not state
     if (full.length < CODE_LENGTH) {
       setError("Please enter the complete 6-digit code.");
-      Vibration.vibrate(200);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       return;
     }
     setIsVerifying(true);
@@ -116,20 +88,22 @@ export default function Otp() {
     setIsVerifying(false);
     if (full !== "123456") {
       setError("Invalid code. Please try again.");
-      Vibration.vibrate(400);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       setCode(Array(CODE_LENGTH).fill(""));
       return;
     }
-  };
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    router.replace("/(Interest)");
+  }, []); // ✅ no deps — reads code via ref
 
   const isFull = code.every((v) => v !== "");
 
   return (
     <View className="flex-1 p-screen-edge">
-      {/* top content */}
+      {/* ── top content ─────────────────────────────────────────────────── */}
       <View>
         {/* Header */}
-        <View className="flex-row items-center justify-between relative pt-4">
+        <View className="flex-row items-center justify-between relative">
           <View className="z-10">
             <Backbutton size={28} />
           </View>
@@ -171,7 +145,7 @@ export default function Otp() {
                     : digit
                       ? BRAND_BLUE
                       : isDark
-                        ? "#334155"
+                        ? "#081931"
                         : "#e2e8f0",
                   scale: digit ? 1.05 : 1,
                 }}
@@ -222,7 +196,7 @@ export default function Otp() {
           {/* Resend */}
           <View className="flex-row justify-center items-center mt-4 gap-1">
             <Text className="text-main-text-secondary text-sm font-inter">
-              Didn't receive a code?{" "}
+              Didn&apos;t receive a code?{" "}
             </Text>
             {seconds > 0 ? (
               <Text className="text-main-text-tertiary text-sm font-inter-medium">
@@ -239,40 +213,46 @@ export default function Otp() {
         </MotiView>
 
         {/* Verify button */}
-        <TouchableOpacity
-          onPress={handleVerify}
-          disabled={!isFull || isVerifying}
-          className="w-full p-4 rounded-3xl items-center mt-8 active:opacity-80"
-          style={{
-            backgroundColor: isFull
-              ? BRAND_BLUE
-              : isDark
-                ? "#1c1c28"
-                : "#e2e8f0",
-          }}
+        <MotiView
+          animate={{ scale: isFull ? 1 : 0.97 }}
+          transition={{ type: "spring", damping: 14 }}
+          className="mt-8"
         >
-          {isVerifying ? (
-            <MotiView
-              from={{ rotate: "0deg" }}
-              animate={{ rotate: "360deg" }}
-              transition={{ type: "timing", duration: 800, loop: true }}
-            >
-              <Ionicons name="reload-outline" size={22} color="#fff" />
-            </MotiView>
-          ) : (
-            <Text
-              className="font-inter-bold text-lg"
-              style={{
-                color: isFull ? "#fff" : isDark ? "#334155" : "#94a3b8",
-              }}
-            >
-              Verify Code
-            </Text>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleVerify}
+            disabled={!isFull || isVerifying}
+            className="w-full p-4 rounded-3xl items-center active:opacity-80"
+            style={{
+              backgroundColor: isFull
+                ? BRAND_BLUE
+                : isDark
+                  ? "#1c1c28"
+                  : "#e2e8f0",
+            }}
+          >
+            {isVerifying ? (
+              <MotiView
+                from={{ rotate: "0deg" }}
+                animate={{ rotate: "360deg" }}
+                transition={{ type: "timing", duration: 800, loop: true }}
+              >
+                <Ionicons name="reload-outline" size={22} color="#fff" />
+              </MotiView>
+            ) : (
+              <Text
+                className="font-inter-bold text-lg"
+                style={{
+                  color: isFull ? "#fff" : isDark ? "#334155" : "#94a3b8",
+                }}
+              >
+                Verify Code
+              </Text>
+            )}
+          </TouchableOpacity>
+        </MotiView>
       </View>
 
-      {/* Numpad pinned to bottom */}
+      {/* ── numpad pinned to bottom ──────────────────────────────────────── */}
       <View className="flex-1 justify-end">
         <Numpad onPress={handleNumpad} />
       </View>
