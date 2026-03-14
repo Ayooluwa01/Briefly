@@ -77,7 +77,7 @@ export default function Otp() {
   }, []);
 
   const handleVerify = useCallback(async () => {
-    const full = codeRef.current.join(""); // ← read from ref, not state
+    const full = codeRef.current.join("");
     if (full.length < CODE_LENGTH) {
       setError("Please enter the complete 6-digit code.");
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -93,8 +93,8 @@ export default function Otp() {
       return;
     }
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    router.replace("/(Interest)");
-  }, []); // ✅ no deps — reads code via ref
+    router.push("/(Interest)");
+  }, []);
 
   const isFull = code.every((v) => v !== "");
 
