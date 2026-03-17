@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useThemeStore } from "@/store/themestore";
 import { MotiView, AnimatePresence } from "moti";
 import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
 
 const OPTIONS = [
   { name: "Technology", icon: "hardware-chip-outline" },
@@ -190,6 +191,7 @@ export default function InterestScreen() {
           <TouchableOpacity
             disabled={selected.length === 0}
             activeOpacity={0.8}
+            onPress={() => router.push("/(tabs)")}
             className="w-full p-4 rounded-3xl items-center"
             style={{
               backgroundColor:

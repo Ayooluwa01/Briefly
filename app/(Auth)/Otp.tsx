@@ -26,7 +26,7 @@ export default function Otp() {
   const [seconds, setSeconds] = useState(RESEND_SECONDS);
   const [isVerifying, setIsVerifying] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const codeRef = useRef<string[]>(code); // ← ref to read code in async context
+  const codeRef = useRef<string[]>(code);
 
   // keep ref in sync with state
   useEffect(() => {
