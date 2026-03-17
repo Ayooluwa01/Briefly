@@ -1,3 +1,4 @@
+import PopupExample from "@/components/modals/welcome";
 import { ThemedText } from "@/components/ThemedText";
 import { useThemeStore } from "@/store/themestore";
 import { Button, Text, View } from "react-native";
@@ -7,6 +8,7 @@ export default function HomeScreen() {
 
   return (
     <View className="p-4">
+      <PopupExample />
       <Text className="text-lg mb-2 dark:text-white">
         Current theme: {theme}
       </Text>
