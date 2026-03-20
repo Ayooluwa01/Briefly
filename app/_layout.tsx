@@ -166,11 +166,11 @@ export default function RootLayout() {
         client={queryClient}
         persistOptions={{ persister: asyncStoragePersister }}
       >
-        {isInternetReachable === false && (
+        {/* {isInternetReachable === false && (
           <View className="bg-red-500 p-2 items-center">
             <Text className="text-white text-xs font-bold">Offline Mode</Text>
           </View>
-        )}
+        )} */}
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(Splash)" />
           <Stack.Screen name="(Onboarding)" />

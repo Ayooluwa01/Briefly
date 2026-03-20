@@ -122,7 +122,10 @@ export default function InterestScreen() {
       contentContainerStyle={{ flexGrow: 1 }}
       className="p-screen-edge"
     >
-      <TouchableOpacity className="items-end mb-big">
+      <TouchableOpacity
+        className="items-end mb-big"
+        onPress={() => router.push("/(tabs)")}
+      >
         <Text>Skip</Text>
       </TouchableOpacity>
       <MotiView
