@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://api.yourdomain.com",
+  baseURL: "https://gnews.io/api/v4",
   timeout: 10000,
 });

@@ -124,7 +124,7 @@ export default function InterestScreen() {
     >
       <TouchableOpacity
         className="items-end mb-big"
-        onPress={() => router.push("/(tabs)")}
+        onPress={() => router.push("/(MainScreens)/home/home")}
       >
         <Text>Skip</Text>
       </TouchableOpacity>
@@ -194,7 +194,7 @@ export default function InterestScreen() {
           <TouchableOpacity
             disabled={selected.length === 0}
             activeOpacity={0.8}
-            onPress={() => router.push("/(tabs)")}
+            onPress={() => router.push("/(MainScreens)/home/home")}
             className="w-full p-4 rounded-3xl items-center"
             style={{
               backgroundColor:

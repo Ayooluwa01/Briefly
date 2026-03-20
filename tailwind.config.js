@@ -62,6 +62,7 @@ module.exports = {
         large: "24px",
 
         // 3. Section Spacing (Space between large chunks of UI)
+        "small-section": "28px",
         section: "32px",
         "section-lg": "48px",
 

@@ -128,7 +128,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: 1000 * 60 * 60 * 24, // 24 hours
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 3, // 3 minutes
     },
   },
 });
@@ -174,7 +174,7 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(Splash)" />
           <Stack.Screen name="(Onboarding)" />
-          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(MainScreens)" />
           <Stack.Screen name="(Auth)" />
           <Stack.Screen name="(Interest)" />
         </Stack>

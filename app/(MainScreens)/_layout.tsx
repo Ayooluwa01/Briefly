@@ -13,8 +13,8 @@ const GLOW = "#007AFF";
 
 const TABS = [
   {
-    route: "/",
-    name: "index",
+    route: "/home",
+    name: "home",
     label: "Home",
     icon: "home",
     iconOff: "home-outline",
@@ -34,8 +34,8 @@ const TABS = [
     iconOff: "bookmark-outline",
   },
   {
-    route: "/profile",
-    name: "profile",
+    route: "/settings",
+    name: "settings",
     label: "Profile",
     icon: "person",
     iconOff: "person-outline",
