@@ -52,7 +52,7 @@ module.exports = {
       },
       spacing: {
         // 1. App Gutter (The consistent horizontal padding for all screens)
-        "screen-edge": "20px",
+        "screen-edge": "14px",
         gutter: "20px",
 
         // 2. Element Spacing (Space between small items like Icon & Text)

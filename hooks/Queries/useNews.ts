@@ -14,3 +14,5 @@ export const useFetchNews = () =>
     refetchInterval: 1 * 60 * 1000,
     refetchIntervalInBackground: false,
   });
+
+// Fetch
