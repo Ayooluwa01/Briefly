@@ -783,7 +783,7 @@ export default function HomeScreen() {
         <ListFooter isFetchingNextPage={isFetchingNextPage} />
       }
       onEndReached={handleEndReached}
-      onEndReachedThreshold={0.5}
+      onEndReachedThreshold={0.2}
     />
   );
 }
