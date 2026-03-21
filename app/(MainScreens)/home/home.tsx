@@ -91,7 +91,7 @@ const TIMING_PULSE_BN = {
   repeatReverse: true,
 } as const;
 
-// ── Stable from/animate objects ──
+// Stable from/animate objects ──
 const FROM_CARD = { opacity: 0, translateY: 24 } as const;
 const ANIM_CARD = { opacity: 1, translateY: 0 } as const;
 const FROM_IMAGE = { opacity: 1.05, scale: 1.06 } as const;
