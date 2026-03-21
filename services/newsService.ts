@@ -26,11 +26,19 @@ const NEWSAPI_KEY = process.env.EXPO_PUBLIC_NEWSAPI_KEY || "";
  * const newsData = await fetchNews({ pageParam: 1 });
  * console.log(newsData.articles);
  */
-export const fetchNews = async ({ pageParam = 1 }: { pageParam?: number }) => {
+export const fetchNews = async ({
+  pageParam = 1,
+  category = "general",
+  country = "ng",
+}: {
+  pageParam?: number;
+  category?: string;
+  country?: string;
+}) => {
   const response = await api.get("/top-headlines", {
     params: {
-      category: "general",
-      country: "ng",
+      category: category,
+      country: country,
       apikey: GNEWS_API_KEY,
       page: pageParam,
       max: PAGE_SIZE,
