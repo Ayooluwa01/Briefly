@@ -214,6 +214,11 @@ const CustomTabBar = memo(function CustomTabBar() {
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
 export default function TabLayout() {
+  const pathname = usePathname();
+
+  // Hide tab bar on settings and sub-settings pages
+  const isSettingsPage = pathname.includes("/settings");
+
   return (
     <>
       <Tabs
@@ -231,7 +236,7 @@ export default function TabLayout() {
         ))}
       </Tabs>
 
-      <CustomTabBar />
+      {!isSettingsPage && <CustomTabBar />}
     </>
   );
 }
