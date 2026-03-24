@@ -35,16 +35,23 @@ export const fetchNews = async ({
   category?: string;
   country?: string;
 }) => {
-  const response = await api.get("/top-headlines", {
-    params: {
-      category: category,
-      country: country,
-      apikey: GNEWS_API_KEY,
-      page: pageParam,
-      max: PAGE_SIZE,
-    },
-  });
-  return response.data;
+  try {
+    const response = await api.get("/top-headlines", {
+      params: {
+        category: category,
+        country: country,
+        apikey: GNEWS_API_KEY,
+        page: pageParam,
+        max: PAGE_SIZE,
+      },
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching news:", errorMessage);
+    throw new Error(`Failed to fetch news: ${errorMessage}`);
+  }
 };
 
 /**

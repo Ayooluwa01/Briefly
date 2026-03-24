@@ -769,7 +769,6 @@ export default function HomeScreen() {
   const handleEndReached = useCallback(() => {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
   if (isLoading) return <HomeSkeleton />;
   if (isError) return <Text className="p-4">Error fetching news</Text>;
   return (
