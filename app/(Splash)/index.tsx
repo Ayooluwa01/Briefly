@@ -1,11 +1,10 @@
-import { StyleSheet, View, Animated, Dimensions } from "react-native";
+import { StyleSheet, View, Animated } from "react-native";
 import React, { useEffect, useRef } from "react";
 import Appicon from "../../assets/Svgs/Appicon.svg";
 import { BodySmall, H1 } from "@/components/ThemedText";
 import { useFirstLaunch } from "@/store/settingstore";
 import { useRouter } from "expo-router";
-
-const { height } = Dimensions.get("window");
+import { useDeviceDimensionsStore } from "@/store/themestore";
 
 export default function SplashScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -13,6 +12,7 @@ export default function SplashScreen() {
   const logoScale = useRef(new Animated.Value(0.8)).current;
   const firstLaunch = useFirstLaunch((state) => state.firstLaunch);
   const router = useRouter();
+  const { height } = useDeviceDimensionsStore();
 
   useEffect(() => {
     Animated.sequence([

@@ -100,6 +100,7 @@ import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import Preloader from "@/components/preloader/preloader";
 
 SplashScreen.preventAutoHideAsync();
 if (__DEV__) {
@@ -166,11 +167,7 @@ export default function RootLayout() {
         client={queryClient}
         persistOptions={{ persister: asyncStoragePersister }}
       >
-        {/* {isInternetReachable === false && (
-          <View className="bg-red-500 p-2 items-center">
-            <Text className="text-white text-xs font-bold">Offline Mode</Text>
-          </View>
-        )} */}
+        {isInternetReachable === false && <Preloader />}
         <Stack screenOptions={{ headerShown: false }}>
           {/* <Stack.Screen name="(Splash)" />
           <Stack.Screen name="(Onboarding)" /> */}

@@ -7,17 +7,22 @@ import {
   TouchableOpacity,
   Switch,
 } from "react-native";
-import React, { memo, useLayoutEffect } from "react";
+import React, { memo, useLayoutEffect, useCallback, useMemo } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useNavigation } from "expo-router";
 import { Body, BodyLarge, BodySmall } from "@/components/ThemedText";
+import { useDevicesettingsStore, useThemeStore } from "@/store/themestore";
 
 // Top Level Component for the Profile Screen
 const Icons = memo(() => {
+  const handleBackPress = useCallback(() => {
+    router.back();
+  }, []);
+
   return (
     <View className="flex-row items-center justify-between mb-6">
       {/* Back Icon */}
-      <TouchableOpacity onPress={() => router.back()}>
+      <TouchableOpacity onPress={handleBackPress}>
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
 
@@ -92,6 +97,10 @@ const Accountitems = [
 ];
 
 const AccountSettingsSection = memo(() => {
+  const handleNavigation = useCallback((route: string) => {
+    router.push(`/settings/${route}` as never);
+  }, []);
+
   return (
     <View className="mb-small-section">
       <Text className="text-gray-400 text-xs font-bold mb-3 ml-1">
@@ -106,7 +115,7 @@ const AccountSettingsSection = memo(() => {
                 ? "border-b border-gray-100"
                 : ""
             }`}
-            onPress={() => router.push(`/settings/${item.route}` as never)}
+            onPress={() => handleNavigation(item.route)}
           >
             <View className="flex-row items-center">
               <Ionicons
@@ -135,16 +144,25 @@ const Notificationitems = [
 const NotificationSection = memo(() => {
   const [pushEnabled, setPushEnabled] = React.useState(true);
   const [emailEnabled, setEmailEnabled] = React.useState(false);
+
+  const handlePushToggle = useCallback(() => {
+    setPushEnabled((prev) => !prev);
+  }, []);
+
+  const handleEmailToggle = useCallback(() => {
+    setEmailEnabled((prev) => !prev);
+  }, []);
+
   return (
     <View className="mb-small-section">
       <Text className="text-gray-400 text-xs font-bold mb-3 ml-1">
         NOTIFICATIONS
       </Text>
-      <View className="bg-white rounded-lg overflow-hidden gap-5 p-3">
+      <View className="bg-white rounded-lg overflow-hidden  p-3">
         {Notificationitems.map((item, index) => (
           <TouchableOpacity
             key={index}
-            className={`flex-row items-center justify-between  p-3 mb-2 ${
+            className={`flex-row items-center justify-between  p-3 ${
               index !== Notificationitems.length - 1
                 ? "border-b border-gray-100"
                 : ""
@@ -163,13 +181,11 @@ const NotificationSection = memo(() => {
               value={
                 item.label === "Push Notifications" ? pushEnabled : emailEnabled
               }
-              onValueChange={() => {
-                if (item.label === "Push Notifications") {
-                  setPushEnabled((prev) => !prev);
-                } else {
-                  setEmailEnabled((prev) => !prev);
-                }
-              }}
+              onValueChange={
+                item.label === "Push Notifications"
+                  ? handlePushToggle
+                  : handleEmailToggle
+              }
               thumbColor={item.color}
               trackColor={{ false: "#d1d5db", true: "#93c5fd" }}
             />
@@ -189,19 +205,28 @@ const Deviceoptions = [
 ];
 
 const DeviceSection = memo(() => {
-  // State to track toogle
-  const [twoFactorEnabled, setTwoFactorEnabled] = React.useState(false);
-  const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
+  const { theme, setTheme } = useThemeStore();
+  const { isBiometricAuthEnabled, toggleBiometricAuth } =
+    useDevicesettingsStore();
+
+  const handleBiometricToggle = useCallback(() => {
+    toggleBiometricAuth();
+  }, [toggleBiometricAuth]);
+
+  const handleDarkModeToggle = useCallback(() => {
+    setTheme(theme === "light" ? "dark" : "light");
+  }, [theme, setTheme]);
+
   return (
     <View className="mb-small-section">
       <Text className="text-gray-400 text-xs font-bold mb-3 ml-1">
         DEVICE SETTINGS
       </Text>
-      <View className="bg-white rounded-lg overflow-hidden gap-5 p-3">
+      <View className="bg-white rounded-lg overflow-hidden p-3">
         {Deviceoptions.map((item, index) => (
           <TouchableOpacity
             key={index}
-            className={`flex-row items-center justify-between  p-3 mb-2 ${
+            className={`flex-row items-center justify-between  p-3  ${
               index !== Deviceoptions.length - 1
                 ? "border-b border-gray-100"
                 : ""
@@ -218,17 +243,15 @@ const DeviceSection = memo(() => {
             {/* Toggle button*/}
             <Switch
               value={
-                item.label === "Two-Factor Authentication"
-                  ? twoFactorEnabled
-                  : darkModeEnabled
+                item.label === "Biometric Login"
+                  ? isBiometricAuthEnabled
+                  : theme === "dark"
               }
-              onValueChange={() => {
-                if (item.label === "Two-Factor Authentication") {
-                  setTwoFactorEnabled((prev) => !prev);
-                } else {
-                  setDarkModeEnabled((prev) => !prev);
-                }
-              }}
+              onValueChange={
+                item.label === "Biometric Login"
+                  ? handleBiometricToggle
+                  : handleDarkModeToggle
+              }
               thumbColor={item.color}
               trackColor={{ false: "#d1d5db", true: "#93c5fd" }}
             />
@@ -240,24 +263,27 @@ const DeviceSection = memo(() => {
 });
 DeviceSection.displayName = "Security Section";
 
+// Constants for Preferences items
+const PREFERENCES_ITEMS = [
+  { icon: "time", label: "Activity History", color: "#16A34A" },
+  { icon: "shield", label: "Privacy Settings", color: "#475569" },
+];
+
 // Preferences Section
 const PreferencesSection = memo(() => {
-  const items = [
-    { icon: "time", label: "Activity History", color: "#16A34A" },
-    { icon: "shield", label: "Privacy Settings", color: "#475569" },
-  ];
-
   return (
     <View className="mb-small-section">
       <Text className="text-gray-400 text-xs font-bold mb-3 ml-1">
         PREFERENCES
       </Text>
-      <View className="bg-white rounded-lg overflow-hidden gap-5 p-3">
-        {items.map((item, index) => (
+      <View className="bg-white rounded-lg overflow-hidden gap-6 p-4">
+        {PREFERENCES_ITEMS.map((item, index) => (
           <TouchableOpacity
             key={index}
-            className={`flex-row items-center justify-between  p-3 mb-2 ${
-              index !== items.length - 1 ? "border-b border-gray-100" : ""
+            className={`flex-row items-center justify-between  p-3  ${
+              index !== PREFERENCES_ITEMS.length - 1
+                ? "border-b border-gray-100"
+                : ""
             }`}
           >
             <View className="flex-row items-center">
@@ -300,7 +326,7 @@ const VersionInfo = memo(() => {
 
 VersionInfo.displayName = "Version Info";
 
-export default function Profile() {
+const Profile = memo(() => {
   return (
     <ScrollView className="flex-1 ">
       <View className="p-screen-edge">
@@ -315,6 +341,10 @@ export default function Profile() {
       </View>
     </ScrollView>
   );
-}
+});
+
+Profile.displayName = "Settings Profile";
+
+export default Profile;
 
 const styles = StyleSheet.create({});

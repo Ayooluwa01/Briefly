@@ -11,7 +11,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Ionicons } from "@expo/vector-icons";
-import { useThemeStore } from "@/store/themestore";
+import { useDeviceDimensionsStore, useThemeStore } from "@/store/themestore";
 
 import { H2, BodySmall } from "@/components/ThemedText";
 import { Logo } from "@/components/icons/logo";
@@ -31,11 +31,10 @@ const validationSchema = Yup.object().shape({
 });
 
 const initialValues: LoginValues = { email: "", password: "" };
-const { height } = Dimensions.get("window");
-
 export default function Loginscreen() {
   const theme = useThemeStore((state) => state.theme);
   const isDark = theme === "dark";
+  const { height } = useDeviceDimensionsStore();
 
   const handleLogin = (values: LoginValues) => {
     console.log("Login Values:", values);

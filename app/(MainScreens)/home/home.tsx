@@ -8,6 +8,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MotiView, MotiText, useAnimationState } from "moti";
 import { router } from "expo-router";
 import { HomeSkeleton } from "@/components/Reusables/skeletons";
+import ErrorScreen from "@/components/errors/error";
 
 interface Article {
   id: string;
@@ -770,7 +771,7 @@ export default function HomeScreen() {
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
   if (isLoading) return <HomeSkeleton />;
-  if (isError) return <Text className="p-4">Error fetching news</Text>;
+  if (isError) return <ErrorScreen />;
   return (
     <FlashList
       data={articles as Article[]}

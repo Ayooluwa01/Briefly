@@ -5,18 +5,18 @@ import { Backbutton } from "@/components/buttons/Backbutton";
 import { H4 } from "@/components/ThemedText";
 import { MotiView } from "moti";
 import { Ionicons } from "@expo/vector-icons";
-import { useThemeStore } from "@/store/themestore";
+import { useDeviceDimensionsStore, useThemeStore } from "@/store/themestore";
 import { router } from "expo-router";
 import { Numpad } from "@/components/buttons/Numpad";
 import * as Haptics from "expo-haptics";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const { height } = Dimensions.get("window");
 const CODE_LENGTH = 6;
 const RESEND_SECONDS = 30;
 const BRAND_BLUE = "#067BF9";
 
 export default function Otp() {
+  const { height } = useDeviceDimensionsStore();
   const theme = useThemeStore((state) => state.theme);
   const isDark = theme === "dark";
   const insets = useSafeAreaInsets();
