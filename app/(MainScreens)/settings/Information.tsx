@@ -163,15 +163,24 @@ const AccountForm = memo(() => {
         </Text>
       </View>
 
-      <TouchableOpacity
-        onPress={handleUpdate}
-        activeOpacity={0.85}
-        className="bg-blue-500 rounded-full py-4 items-center mb-10"
-      >
-        <Text className="text-white font-bold text-base tracking-wide">
-          Update Information
-        </Text>
-      </TouchableOpacity>
+      <View className=" pb-8 pt-3 bg-gray-50">
+        <TouchableOpacity
+          onPress={handleUpdate}
+          activeOpacity={0.85}
+          className="bg-blue-600 rounded-full py-4 items-center"
+          style={{
+            shadowColor: "#3b82f6",
+            shadowOpacity: 0.4,
+            shadowRadius: 14,
+            shadowOffset: { width: 0, height: 5 },
+            elevation: 8,
+          }}
+        >
+          <Text className="text-white font-bold text-base tracking-wide">
+            Update Information
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 });
@@ -180,7 +189,7 @@ AccountForm.displayName = "AccountForm";
 // ─── Screen Root ─────────────────────────────────────────────────────────────
 const Information = () => (
   <ScrollView
-    className="flex-1 p-screen-edge bg-gray-100"
+    className="flex-1 p-screen-edge"
     showsVerticalScrollIndicator={false}
     keyboardShouldPersistTaps="handled"
   >

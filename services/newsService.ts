@@ -45,7 +45,6 @@ export const fetchNews = async ({
         max: PAGE_SIZE,
       },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
