@@ -48,7 +48,7 @@ export const fetchNews = async ({
     return response.data;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    console.error("Error fetching news:", errorMessage);
+    // console.error("Error fetching news:", errorMessage);
     throw new Error(`Failed to fetch news: ${errorMessage}`);
   }
 };

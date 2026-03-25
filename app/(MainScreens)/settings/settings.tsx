@@ -5,6 +5,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Switch,
 } from "react-native";
 import React, { memo, useLayoutEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -68,29 +69,51 @@ const ProfileInfo = memo(() => {
 ProfileInfo.displayName = "Profile Info";
 
 // Account Settings Section
-const AccountSettingsSection = memo(() => {
-  const items = [
-    { icon: "person", label: "Account Information", route: "Information" },
-    { icon: "star", label: "Manage Interests", route: "Interest" },
-    { icon: "diamond", label: "Manage Subscription", route: "Subscription" },
-  ];
 
+const Accountitems = [
+  {
+    icon: "person",
+    label: "Account Information",
+    route: "Information",
+    color: "#3b82f6",
+  },
+  {
+    icon: "star",
+    label: "Manage Interests",
+    route: "Interest",
+    color: "#9333EA",
+  },
+  {
+    icon: "diamond",
+    label: "Manage Subscription",
+    route: "Subscription",
+    color: "#FBBF24",
+  },
+];
+
+const AccountSettingsSection = memo(() => {
   return (
-    <View className="mb-section">
+    <View className="mb-small-section">
       <Text className="text-gray-400 text-xs font-bold mb-3 ml-1">
         ACCOUNT SETTINGS
       </Text>
-      <View className="bg-white rounded-lg overflow-hidden gap-6 p-3">
-        {items.map((item, index) => (
+      <View className="bg-white rounded-lg overflow-hidden gap-5 p-3">
+        {Accountitems.map((item, index) => (
           <TouchableOpacity
             key={index}
             className={`flex-row items-center justify-between  p-3 mb-2 ${
-              index !== items.length - 1 ? "border-b border-gray-100" : ""
+              index !== Accountitems.length - 1
+                ? "border-b border-gray-100"
+                : ""
             }`}
             onPress={() => router.push(`/settings/${item.route}` as never)}
           >
             <View className="flex-row items-center">
-              <Ionicons name={item.icon as never} size={20} color="#3b82f6" />
+              <Ionicons
+                name={item.icon as never}
+                size={20}
+                color={item.color}
+              />
               <Text className="text-gray-800 ml-4">{item.label}</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
@@ -103,19 +126,133 @@ const AccountSettingsSection = memo(() => {
 
 AccountSettingsSection.displayName = "Account Settings";
 
+// Notification Section
+const Notificationitems = [
+  { icon: "notifications", label: "Push Notifications", color: "#FB923C" },
+  { icon: "mail", label: "Email Notifications", color: "#0891B2" },
+];
+
+const NotificationSection = memo(() => {
+  const [pushEnabled, setPushEnabled] = React.useState(true);
+  const [emailEnabled, setEmailEnabled] = React.useState(false);
+  return (
+    <View className="mb-small-section">
+      <Text className="text-gray-400 text-xs font-bold mb-3 ml-1">
+        NOTIFICATIONS
+      </Text>
+      <View className="bg-white rounded-lg overflow-hidden gap-5 p-3">
+        {Notificationitems.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            className={`flex-row items-center justify-between  p-3 mb-2 ${
+              index !== Notificationitems.length - 1
+                ? "border-b border-gray-100"
+                : ""
+            }`}
+          >
+            <View className="flex-row items-center">
+              <Ionicons
+                name={item.icon as never}
+                size={20}
+                color={item.color}
+              />
+              <Text className="text-gray-800 ml-4">{item.label}</Text>
+            </View>
+            {/* Toggle button*/}
+            <Switch
+              value={
+                item.label === "Push Notifications" ? pushEnabled : emailEnabled
+              }
+              onValueChange={() => {
+                if (item.label === "Push Notifications") {
+                  setPushEnabled((prev) => !prev);
+                } else {
+                  setEmailEnabled((prev) => !prev);
+                }
+              }}
+              thumbColor={item.color}
+              trackColor={{ false: "#d1d5db", true: "#93c5fd" }}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+});
+
+NotificationSection.displayName = "Notification Section";
+
+// Device options--Biometrics and toggling dark mode
+const Deviceoptions = [
+  { icon: "finger-print", label: "Biometric Login", color: "#10B981" },
+  { icon: "moon", label: "Dark Mode", color: "#6B7280" },
+];
+
+const DeviceSection = memo(() => {
+  // State to track toogle
+  const [twoFactorEnabled, setTwoFactorEnabled] = React.useState(false);
+  const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
+  return (
+    <View className="mb-small-section">
+      <Text className="text-gray-400 text-xs font-bold mb-3 ml-1">
+        DEVICE SETTINGS
+      </Text>
+      <View className="bg-white rounded-lg overflow-hidden gap-5 p-3">
+        {Deviceoptions.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            className={`flex-row items-center justify-between  p-3 mb-2 ${
+              index !== Deviceoptions.length - 1
+                ? "border-b border-gray-100"
+                : ""
+            }`}
+          >
+            <View className="flex-row items-center">
+              <Ionicons
+                name={item.icon as never}
+                size={20}
+                color={item.color}
+              />
+              <Text className="text-gray-800 ml-4">{item.label}</Text>
+            </View>
+            {/* Toggle button*/}
+            <Switch
+              value={
+                item.label === "Two-Factor Authentication"
+                  ? twoFactorEnabled
+                  : darkModeEnabled
+              }
+              onValueChange={() => {
+                if (item.label === "Two-Factor Authentication") {
+                  setTwoFactorEnabled((prev) => !prev);
+                } else {
+                  setDarkModeEnabled((prev) => !prev);
+                }
+              }}
+              thumbColor={item.color}
+              trackColor={{ false: "#d1d5db", true: "#93c5fd" }}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
+});
+DeviceSection.displayName = "Security Section";
+
 // Preferences Section
 const PreferencesSection = memo(() => {
   const items = [
-    { icon: "time", label: "Activity History" },
-    { icon: "shield", label: "Privacy Settings" },
+    { icon: "time", label: "Activity History", color: "#16A34A" },
+    { icon: "shield", label: "Privacy Settings", color: "#475569" },
   ];
 
   return (
-    <View className="mb-section">
+    <View className="mb-small-section">
       <Text className="text-gray-400 text-xs font-bold mb-3 ml-1">
         PREFERENCES
       </Text>
-      <View className="bg-white rounded-lg overflow-hidden gap-6 p-3">
+      <View className="bg-white rounded-lg overflow-hidden gap-5 p-3">
         {items.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -124,7 +261,11 @@ const PreferencesSection = memo(() => {
             }`}
           >
             <View className="flex-row items-center">
-              <Ionicons name={item.icon as never} size={20} color="#10b981" />
+              <Ionicons
+                name={item.icon as never}
+                size={20}
+                color={item.color}
+              />
               <Text className="text-gray-800 ml-4">{item.label}</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
@@ -166,6 +307,8 @@ export default function Profile() {
         <Icons />
         <ProfileInfo />
         <AccountSettingsSection />
+        <NotificationSection />
+        <DeviceSection />
         <PreferencesSection />
         <LogOutButton />
         <VersionInfo />
