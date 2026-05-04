@@ -164,6 +164,7 @@ const BreakingNews = memo(() => {
     cardState.transitionTo("pressed");
     arrowState.transitionTo("pressed");
     router.push("/home/reader");
+    console.log('error')
   }, [cardState, arrowState]);
 
   const handlePressOut = useCallback(() => {
@@ -561,8 +562,19 @@ interface ArticleCardProps {
 }
 
 const ArticleCard = memo(({ item, index }: ArticleCardProps) => {
+
+  // Reading the news
+const handlePressIn = useCallback(() => {
+    
+router.push({
+  pathname: "/home/reader",
+  params: { url: item.url }
+});
+
+  console.log('news',item)
+  }, []);
   return (
-    <Pressable>
+    <Pressable onPressIn={handlePressIn}>
       {({ pressed }) => (
         <MotiView
           animate={{ scale: pressed ? 0.972 : 1 }}

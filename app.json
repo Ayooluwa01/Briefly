@@ -8,17 +8,22 @@
     "scheme": "briefly",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/7fd7c759-2120-46f3-af4b-9efdd0bcf5b6"
+    },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aysolutions.briefly", // Add this
+      "bundleIdentifier": "com.briefly.mobile",
       "buildNumber": "1.0.0",
-      "icon": "./assets/images/icon.png" // Same as root icon
+      "icon": "./assets/images/icon.png"
     },
     "android": {
-      "package": "com.aysolutions.briefly", // Add this
+      "package": "com.briefly.mobile",
       "versionCode": 1,
-
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -50,6 +55,14 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7fd7c759-2120-46f3-af4b-9efdd0bcf5b6"
+      }
+    },
+
+    "owner": "olusegunstephen01"
   }
 }

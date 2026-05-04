@@ -69,7 +69,9 @@
 //     </ColorTheme>
 //   );
 // }
-
+if (__DEV__) {
+  require("../ReactotronConfig");
+}
 import { Stack } from "expo-router";
 import "react-native-reanimated";
 import "../global.css";
@@ -103,9 +105,7 @@ import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client
 import Preloader from "@/components/preloader/preloader";
 
 SplashScreen.preventAutoHideAsync();
-if (__DEV__) {
-  require("../ReactotronConfig");
-}
+
 
 // 1.  Online Manager (Refetch on reconnect)
 onlineManager.setEventListener((setOnline) => {
@@ -167,10 +167,10 @@ export default function RootLayout() {
         client={queryClient}
         persistOptions={{ persister: asyncStoragePersister }}
       >
-        {isInternetReachable === false && <Preloader />}
+        {/* {isInternetReachable === false && <Preloader />} */}
         <Stack screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="(Splash)" />
-          <Stack.Screen name="(Onboarding)" /> */}
+          <Stack.Screen name="(Splash)" />
+          <Stack.Screen name="(Onboarding)" />
           <Stack.Screen name="(MainScreens)" />
           <Stack.Screen name="(Auth)" />
           <Stack.Screen name="(Interest)" />

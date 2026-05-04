@@ -4,12 +4,11 @@ import Constants from "expo-constants";
 // import { queryClient } from "./your-query-client-file"; // Import your TanStack Query client
 
 const hostUri = Constants.expoConfig?.hostUri;
-const host = hostUri ? hostUri.split(":")[0] : "localhost";
 
 const tron = Reactotron.setAsyncStorageHandler!(AsyncStorage)
   .configure({
     name: "Briefly",
-    host: host,
+    host: "10.210.251.198",
   })
   .useReactNative({
     asyncStorage: true,
