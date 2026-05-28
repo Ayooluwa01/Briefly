@@ -18,12 +18,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.briefly.mobile",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1",
       "icon": "./assets/images/icon.png"
     },
     "android": {
       "package": "com.briefly.mobile",
-      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
