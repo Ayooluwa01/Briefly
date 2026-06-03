@@ -5,7 +5,6 @@
   },
 
   "build": {
-    // Developer branch for developer only
     "development": {
       "developmentClient": true,
       "distribution": "internal",
@@ -23,7 +22,6 @@
       }
     },
 
-    // Preview branch for internal testing and QA
     "preview": {
       "distribution": "internal",
       "channel": "staging",
@@ -37,7 +35,6 @@
       }
     },
 
-    // Production branch for release to app stores
     "production": {
       "channel": "production",
       "autoIncrement": true,
